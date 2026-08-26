@@ -1,0 +1,6 @@
+name: flags_2_env_interfaces
+description: Generated data-only interfaces for flags-2-env
+version: 0.1.0
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
