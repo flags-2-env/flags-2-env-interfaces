@@ -1,5 +1,15 @@
 # flags-2-env — interfaces
 
+## Parent / root agent contract
+
+The fleet-wide parent lives at:
+
+- GitHub: https://github.com/oresoftware/my-ai/AGENTS.md
+- Canonical disk path: `~/codes/oresoftware/my-ai/AGENTS.md`
+- `~/codes/AGENTS.md` is a symlink to `~/codes/oresoftware/my-ai/AGENTS.md` (installed by `~/codes/oresoftware/my-ai/setup-final.sh`)
+
+When this file and the parent disagree: follow this file for this repository's local layout and tools; follow the parent for org-wide conventions and the functional programming rules.
+
 Canonical `interfaces` repository for [`flags-2-env`](https://github.com/flags-2-env).
 
 - Internal runtimes: Rust, TypeScript, Dart.
