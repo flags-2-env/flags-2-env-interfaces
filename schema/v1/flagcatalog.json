@@ -19,7 +19,9 @@
       "minLength": 1
     },
     "payload": {
-      "type": "object"
+      "type": "object",
+      "properties": {},
+      "unevaluatedProperties": {}
     }
   }
 }
