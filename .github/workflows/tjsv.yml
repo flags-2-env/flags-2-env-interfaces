@@ -1,0 +1,50 @@
+name: TJSV peer-authority admission
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tjsv-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  parity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact reviewed head
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Compare independent TypeSpec and JSON Schema authorities
+        uses: ORESoftware/typespec-json-schema-validator@bd7f988f110d4f8cd244d1388f6cbc09b5d349ff
+        with:
+          typespec: schema/v1/flagcatalog.tsp
+          schema: schema/v1/flagcatalog.json
+          instances: schema/v1/instances
+          report: .typespec-json-schema-validator/report.json
+          output_dir: .typespec-json-schema-validator/generated
+          seal_object_schemas: "false"
+
+      - name: Retain TJSV parity evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: flagcatalog-tjsv-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .typespec-json-schema-validator/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
