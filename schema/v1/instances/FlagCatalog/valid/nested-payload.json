@@ -1,0 +1,16 @@
+{
+  "id": "flags-2-env",
+  "revision": "v1.1",
+  "payload": {
+    "commands": ["serve", "preflight"],
+    "environment": {
+      "required": ["FLAGS_2_ENV_API_HTTP_BASE"],
+      "secret": false
+    },
+    "metadata": {
+      "generation": 2,
+      "enabled": true,
+      "note": null
+    }
+  }
+}
