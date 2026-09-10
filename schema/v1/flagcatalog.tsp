@@ -17,5 +17,7 @@ model FlagCatalog {
   @minLength(1)
   revision: string;
 
-  payload: Record<unknown>;
+  // Anonymous spread preserves an inline arbitrary JSON-object payload without
+  // manufacturing a second named RecordUnknown contract declaration.
+  payload: { ...Record<unknown>; };
 }
