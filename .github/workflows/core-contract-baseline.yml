@@ -1,0 +1,9 @@
+name: Core contract baseline
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  baseline:
+    uses: ORESoftware/typespec-json-schema-validator/.github/workflows/core-contract-baseline-reusable.yml@30460506b81570df89c10744ede007ab9ead7e81

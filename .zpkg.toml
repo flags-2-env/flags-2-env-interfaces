@@ -1,4 +1,26 @@
+[package]
+org = "flags-2-env"
 name = "flags-2-env-interfaces"
-kind = "interfaces"
 version = "0.1.0"
+description = "Data-only interfaces for flags-2-env"
+license = "MIT"
+language = "rust"
+keywords = ["flags", "environment", "interfaces", "contracts"]
 
+[package.repository]
+vcs = "git"
+url = "https://github.com/flags-2-env/flags-2-env-interfaces"
+
+[install]
+adapter = "none"
+dir = ".vendor/.zed"
+
+[publish]
+include_readme = true
+tag_format = "v{version}"
+exclude = [".env", ".env.*", ".vendor/.zed/**", ".zed-pack/**", "target/**", "tmp/**", "**/*.log", ".DS_Store"]
+
+[targets.repository]
+dir = "."
+name = "flags-2-env-interfaces"
+adapter = "none"
