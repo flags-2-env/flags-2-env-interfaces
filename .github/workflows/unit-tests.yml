@@ -22,4 +22,4 @@ jobs:
         with:
           toolchain: stable
       - name: Run unit and integration tests
-        run: cargo test --locked --all-targets
+        run: cargo test --all-targets
