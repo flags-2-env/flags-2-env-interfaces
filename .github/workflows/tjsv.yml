@@ -30,7 +30,7 @@ jobs:
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Compare independent TypeSpec and JSON Schema authorities
-        uses: ORESoftware/typespec-json-schema-validator@bd7f988f110d4f8cd244d1388f6cbc09b5d349ff
+        uses: ORESoftware/typespec-json-schema-validator@f386c78e44c93309029e186799d926c652cb0d96
         with:
           typespec: schema/v1/flagcatalog.tsp
           schema: schema/v1/flagcatalog.json
