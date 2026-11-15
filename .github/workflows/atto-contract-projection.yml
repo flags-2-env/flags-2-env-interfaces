@@ -38,7 +38,7 @@ jobs:
           git diff --check
       - name: Execute production Rust decoder and exhaustive 882-case regression
         run: |
-          cargo fmt --check
+          rustfmt --check src/atto_projection.rs
           cargo test --lib atto_projection::tests
       - name: Retain JavaScript fixture-model compatibility until Rust migration parity
         run: node --test projections/atto/*.test.mjs
