@@ -120,4 +120,85 @@ mod tests {
         );
         assert!(decode_catalog_for_atto(valid, valid.len()).is_ok());
     }
+
+    /// Exhaustive host-side shape matrix: 7 id choices x 7 revision choices x
+    /// 9 payload choices x 2 unknown-field choices = 882 JSON objects.
+    /// Unlike a JavaScript reference model, this executes the production Rust decoder.
+    #[test]
+    fn exhaustive_882_catalog_shapes_follow_authored_root_contract() {
+        let names: [Option<Value>; 7] = [
+            None,
+            Some(Value::Null),
+            Some(Value::String(String::new())),
+            Some(Value::String(" ".to_owned())),
+            Some(Value::String("valid".to_owned())),
+            Some(Value::Number(0.into())),
+            Some(Value::Bool(false)),
+        ];
+        let payloads: [Option<Value>; 9] = [
+            None,
+            Some(Value::Null),
+            Some(Value::Object(Map::new())),
+            Some(serde_json::json!({"x": [1, true, null]})),
+            Some(Value::Array(Vec::new())),
+            Some(Value::Number(1.into())),
+            Some(Value::String("x".to_owned())),
+            Some(Value::Bool(false)),
+            Some(Value::Bool(true)),
+        ];
+
+        let mut cases = 0;
+        let mut accepted = 0;
+        for id in &names {
+            for revision in &names {
+                for payload in &payloads {
+                    for extra in [false, true] {
+                        let mut object = Map::new();
+                        if let Some(value) = id {
+                            object.insert("id".to_owned(), value.clone());
+                        }
+                        if let Some(value) = revision {
+                            object.insert("revision".to_owned(), value.clone());
+                        }
+                        if let Some(value) = payload {
+                            object.insert("payload".to_owned(), value.clone());
+                        }
+                        if extra {
+                            object.insert("unexpected".to_owned(), Value::Bool(true));
+                        }
+                        let bytes = serde_json::to_vec(&Value::Object(object))
+                            .expect("test object always serializes");
+                        let expected = matches!(id, Some(Value::String(s)) if !s.is_empty())
+                            && matches!(revision, Some(Value::String(s)) if !s.is_empty())
+                            && matches!(payload, Some(Value::Object(_)))
+                            && !extra;
+                        let actual = decode_catalog_for_atto(&bytes, MAX_CATALOG_BYTES).is_ok();
+                        assert_eq!(
+                            actual, expected,
+                            "case {cases}: id={id:?} revision={revision:?} payload={payload:?} extra={extra}"
+                        );
+                        cases += 1;
+                        accepted += usize::from(actual);
+                    }
+                }
+            }
+        }
+        assert_eq!(cases, 882);
+        assert_eq!(accepted, 8);
+    }
+
+    #[test]
+    fn strict_decoder_does_not_confuse_escaped_keys_or_trailing_data() {
+        assert!(decode(r#"{"id":"a","revision":"1","payload":{"a":1}}"#).is_ok());
+        assert_eq!(
+            decode(r#"{"id":"a","revision":"1","payload":{}}garbage"#),
+            Err(ProjectionError::InvalidJsonOrShape)
+        );
+        // A JSON escaped key is still a duplicate of the unescaped root key.
+        assert_eq!(
+            decode(r#"{"id":"a","\\u0069d":"b","revision":"1","payload":{}}"#),
+            Err(ProjectionError::InvalidJsonOrShape)
+        );
+    }
+
 }
