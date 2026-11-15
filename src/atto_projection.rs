@@ -196,9 +196,8 @@ mod tests {
         );
         // A JSON escaped key is still a duplicate of the unescaped root key.
         assert_eq!(
-            decode(r#"{"id":"a","\\u0069d":"b","revision":"1","payload":{}}"#),
+            decode(r#"{"id":"a","\u0069d":"b","revision":"1","payload":{}}"#),
             Err(ProjectionError::InvalidJsonOrShape)
         );
     }
-
 }
