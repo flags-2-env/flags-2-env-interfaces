@@ -1,0 +1,25 @@
+// Pure downstream AttoLang scalar contract predicates, not a third schema authority.
+// The trusted host must decode JSON and supply type/required-property facts.
+define module flags_2_env_contracts as
+  pub fnc catalog_shape(bool id_is_string, bool id_nonempty,
+                        bool revision_is_string, bool revision_nonempty,
+                        bool payload_is_object, bool no_unknown_properties): bool {
+    return id_is_string && id_nonempty && revision_is_string &&
+      revision_nonempty && payload_is_object && no_unknown_properties;
+  }
+
+  // Health is an existing Rust/TS/Dart interface; the value of "ok" may be false.
+  pub fnc health_shape(bool ok_is_boolean, bool service_is_string,
+                       bool protocol_is_string): bool {
+    return ok_is_boolean && service_is_string && protocol_is_string;
+  }
+
+  pub fnc self_check(): bool {
+    return catalog_shape(true, true, true, true, true, true) &&
+      !catalog_shape(true, false, true, true, true, true) &&
+      !catalog_shape(true, true, true, true, false, true) &&
+      !catalog_shape(true, true, true, true, true, false) &&
+      health_shape(true, true, true) &&
+      !health_shape(false, true, true);
+  }
+end

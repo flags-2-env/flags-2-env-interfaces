@@ -1,0 +1,15 @@
+{
+  "contract": "flags-2-env/attolang-interface-projection/v1",
+  "entrypoint": "flag_catalog.atto",
+  "status": "experimental-source-only",
+  "authorities": [
+    "schema/v1/flagcatalog.tsp",
+    "schema/v1/flagcatalog.json"
+  ],
+  "peer_authorities": true,
+  "is_authority": false,
+  "compile_verified": false,
+  "runtime_verified": false,
+  "parser_implemented": false,
+  "models": ["FlagCatalog", "Health"]
+}
