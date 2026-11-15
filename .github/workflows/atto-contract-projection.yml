@@ -36,5 +36,9 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
           git diff --check
-      - name: Exercise interface projection and host bridge models
+      - name: Execute production Rust decoder and exhaustive 882-case regression
+        run: |
+          cargo fmt --check
+          cargo test --lib atto_projection::tests
+      - name: Retain JavaScript fixture-model compatibility until Rust migration parity
         run: node --test projections/atto/*.test.mjs
