@@ -5,12 +5,16 @@ on:
       - 'projections/atto/**'
       - 'schema/v1/**'
       - '.github/workflows/atto-contract-projection.yml'
+      - 'src/atto_projection.rs'
+      - 'src/lib.rs'
   push:
     branches: [main]
     paths:
       - 'projections/atto/**'
       - 'schema/v1/**'
       - '.github/workflows/atto-contract-projection.yml'
+      - 'src/atto_projection.rs'
+      - 'src/lib.rs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -32,5 +36,5 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
           git diff --check
-      - name: Exercise interface projection and authored fixture model
-        run: node --test projections/atto/contract_model.test.mjs
+      - name: Exercise interface projection and host bridge models
+        run: node --test projections/atto/*.test.mjs
