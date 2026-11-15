@@ -1,0 +1,36 @@
+name: AttoLang interface projection model
+on:
+  pull_request:
+    paths:
+      - 'projections/atto/**'
+      - 'schema/v1/**'
+      - '.github/workflows/atto-contract-projection.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'projections/atto/**'
+      - 'schema/v1/**'
+      - '.github/workflows/atto-contract-projection.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-projection:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22'
+      - name: Verify exact head and inspect changes
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          git diff --check
+      - name: Exercise interface projection and authored fixture model
+        run: node --test projections/atto/contract_model.test.mjs
