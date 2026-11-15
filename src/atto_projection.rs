@@ -2,9 +2,9 @@
 
 //! Strict host JSON bridge for downstream AttoLang FlagCatalog projection.
 //! The authored TypeSpec and JSON Schema remain independent peer authorities.
+use crate::protocol::FlagCatalog;
 use serde::Deserialize;
 use serde_json::{Map, Value};
-use crate::protocol::FlagCatalog;
 
 pub const MAX_CATALOG_BYTES: usize = 1024 * 1024;
 
